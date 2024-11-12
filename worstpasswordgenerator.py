@@ -61,10 +61,10 @@ if files:
 
     while True:
         if choice == '*' or not choice:
-            unique_passwords = set()
-            for _, matches in files:
-                unique_passwords.update(matches)
-            matches = list(unique_passwords)
+            matches = []                                            # I'm doing it with a list instead of using a set
+            for _, file_matches in files:                           # and adding them in this manner so that the order
+                for match in file_matches:                          # is preserved, as most common password lists are
+                    if match not in matches: matches.append(match)  # sorted with the most common passwords at the top.
             break
         elif choice.isdigit():
             file_index = int(choice) - 1
