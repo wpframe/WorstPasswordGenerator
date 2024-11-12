@@ -1,16 +1,21 @@
 # WorstPasswordGenerator
 Finds the worst possible passwords based on a password policy. To be used for testing common password checking.
 
-Place password lists into `lists/`, run the program and specify your password policy, and the script will scan for common passwords that meet your password policy.
+Run the program, specify your password policy, and the script will scan for common passwords that meet your password policy.
 
+Optionally, add additional password lists to `lists/`.
+
+Example usage:
 ```
-options:
-  -h, --help            show this help message and exit
-  -f F, -fast F, -fasttrack F
-                        Fast-track mode: specify minimum total letters (e.g.,
-                        -f 12), uses default values for all character
-                        requirements
-  -x, -cb, -copy, -clipboard, -xclip
-                        Copy matching passwords to clipboard using xclip (if
-                        installed)
+python3 worstpasswordgenerator.py
+```
+
+The `-f` flag enables fast-track mode, which takes a number of the minimum total letters, and uses default values for each character (1 lowercase letter, 1 uppercase letter, 1 digit, and 1 symbol):
+```
+python3 worstpasswordgenerator.py -f 12
+```
+
+The `-x` flag specifies to copy matching passwords to the clipboard. While the user is prompted for this option during normal use of the application, the flag makes it easy to spam enter through the remaining defaults if you know what you're doing.
+```
+python3 worstpasswordgenerator.py -x -f 12
 ```
