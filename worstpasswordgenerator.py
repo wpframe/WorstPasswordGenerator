@@ -9,7 +9,7 @@ def get_input(prompt, default_value=None):
     if not user_input or user_input.lower() in ['y', 'yes']: return default_value
     return int(user_input)
 
-parser = argparse.ArgumentParser(description="Generates the worst possible password based on a password policy. To be used for testing common-password checking.")
+parser = argparse.ArgumentParser(description="Find the worst possible passwords based on a password policy. To be used for testing common password checking.")
 parser.add_argument('-f', '-fast', '-fasttrack', type=int, help="Fast-track mode: specify minimum total letters (e.g., -f 12), uses default values for all character requirements")
 parser.add_argument('-x', '-cb', '-copy', '-clipboard', '-xclip', action='store_true', help="Copy matching passwords to clipboard using xclip (if installed)")
 args = parser.parse_args()
@@ -48,14 +48,15 @@ for filename in os.listdir("lists"):
             if matches: files.append((filename, matches))
 
 if files:
-    print("\nFiles containing matching passwords:")
-    for index, (filename, matches) in enumerate(files):
-        print(f"{index + 1}. {filename}:")
-        for i, match in enumerate(matches[:5]):
-            print(f"   {i + 1}. {match}")
-        if len(matches) - 5 > 0: print(f"   ...and {len(matches) - 5} more\n")
-
-    choice = input("Enter the number of the file you want to see all passwords from (or press Enter for all files): ").strip()
+    if not args.f: 
+        print("\nFiles containing matching passwords:")
+        for index, (filename, matches) in enumerate(files):
+            print(f"{index + 1}. {filename}:")
+            for i, match in enumerate(matches[:5]):
+                print(f"   {i + 1}. {match}")
+            if len(matches) - 5 > 0: print(f"   ...and {len(matches) - 5} more\n")
+    
+    choice = None if args.f else input("Enter the number of the file you want to see all passwords from (or press Enter for all files): ").strip()
 
     matches = []
 
@@ -73,13 +74,12 @@ if files:
                 break
             else: print("Invalid file number.")
 
-    line_choice = input("Enter number of lines to display (or press Enter for all): ").strip()
+    line_choice = "" if args.f else input("Enter number of lines to display (or press Enter for all): ").strip()
 
     if line_choice.isdigit(): matches = matches[:int(line_choice)]
     matches = "\n".join(matches)
 
-    optional_copy = False
-    if not args.x: optional_copy = input("Use xclip to copy to keyboard (y/yes)? ").lower() in ['y', 'ye', 'yes']
+    optional_copy = False if args.f else input("Use xclip to copy to keyboard (y/yes)? ").lower() in ['y', 'ye', 'yes']
     
     if args.x or optional_copy:
         if shutil.which('xclip'):
@@ -90,7 +90,7 @@ if files:
             except Exception as e: print(f"Failed to copy to clipboard: {e}")
         else: print("xclip is not installed. Please install it or use another output method.")
     else:
-        output_choice = input("Enter a filepath to save the results (or press Enter to print to terminal): ").strip()
+        output_choice = False if args.f else input("Enter a filepath to save the results (or press Enter to print to terminal): ").strip()
         if output_choice:
             with open(output_choice, 'w') as f:
                 f.write(matches)
