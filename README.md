@@ -1,5 +1,7 @@
 # WorstPasswordGenerator
-Generates the worst possible password based on a password policy. To be used for testing common-password checking.
+Finds the worst possible passwords based on a password policy. To be used for testing common password checking.
+
+Place password lists into `lists/`, run the program and specify your password policy, and the script will scan for common passwords that meet your password policy.
 
 ```
 options:
